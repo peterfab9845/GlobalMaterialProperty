@@ -70,33 +70,29 @@ namespace peterfab
             // This will be merged with the rest of the playable layer at the end of this function.
             var ctrl = aac.NewAnimatorController();
 
-            // Create a new layer in that animator controller.
-            var layer = ctrl.NewLayer();
-
-            var blendTree = aac.NewBlendTree().Direct();
-
             foreach(var component in components)
             {
+                // Create a new layer in that animator controller.
+                var layer = ctrl.NewLayer(component.parameterName);
+
                 var param = layer.FloatParameter(component.parameterName);
                 layer.OverrideValue(param, component.defaultValue);
 
-                blendTree.WithAnimation(aac.NewClip().Animating(clip =>
+                layer.NewState(component.parameterName)
+                .WithAnimation(aac.NewClip().Animating(clip =>
                 {
                     foreach (var propertyName in component.propertyNames)
                     {
                         clip.Animates(renderers, $"material.{propertyName}")
                             .WithAnimationCurve(component.curve);
                     }
-                }), param);
+                }))
+                .WithMotionTime(param);
 
                 modularAvatar.NewParameter(param);
 
                 modularAvatar.EditMenuItem(component.gameObject).Radial(param).Name(component.parameterName);
             }
-
-            // The first created state is the default one connected to the "Entry" node.
-            var state = layer.NewState(SystemName)
-                .WithAnimation(blendTree);
 
             // By creating a Modular Avatar Merge Animator component,
             // our animator controller will be added to the avatar's FX layer.
