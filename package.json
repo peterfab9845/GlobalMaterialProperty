@@ -1,0 +1,10 @@
+{
+  "name": "com.peterfab.global-material-property",
+  "displayName": "Global Material Property",
+  "version": "1.0.0",
+  "url": "git+https://github.com/peterfab9845/GlobalMaterialProperty.git",
+  "author": {
+    "name": "peterfab",
+    "email": "github@peterfab.com"
+  }
+}
